@@ -1,130 +1,127 @@
-# ___Explorando-Bancos-de-Dados___
----
-## ___Banco de Dados___
-```Definição:``` Coleção organizada e armazenada de informações de modo que seja mais fácil acessar e gerenciar.
+***Exploring Databases***
+=========================
 
-Este conceito pode ser destrinchado em 2 estados:
-- _Relacional_
-- _Não relacional_
+***Database***
+--------------
 
-![]()
+`Definition:` An organized collection of information, stored and structured in a way that facilitates efficient access, management, and updating.
 
----
+This concept can be broadly divided into two categories:
 
-### ___Banco de Dados Relacional___
+-   *Relational*
 
-Um banco de dados relacional é um tipo de banco de dados que armazena e fornece acesso a pontos de dados relacionados entre si. Basicamente, são baseados no modelo de relação, uma maneira intuitiva e direta de representar dados em tabelas, com linhas e colunas separadas com IDs exclusivos facilitando o estabelecimento das relações entre os pontos.
+-   *Non-Relational*
 
-#### __Exemplo de Uso:__ ###
+### ***Relational Database***
 
-Uma farmacia que relaciona os dados de estoque. Resumidamente, usa chaves estrangeiras para chegar em uma chave primaria (ID exclusivo), o remédio sendo encontrado em através de colunas e linhas da tabela com informações sobre produto e sua quantidade.
+A relational database is a type of database that stores and provides access to data points that are related to one another. Fundamentally, they are based on the **relational model**, an intuitive and straightforward method of representing data in tables. These tables consist of rows and columns, with each row possessing a unique identifier (a **primary key**), which facilitates the establishment of relationships between data points across different tables.
 
----
+#### **Use Case Example:**
 
-### ___Banco de Dados Não Relacional___
+Consider a pharmacy managing its inventory. It would use **foreign keys** (e.g., a `Medication_ID` in a `Sales` table) to reference the **primary key** in a `Medications` table. In essence, a specific medication's record is located through the intersection of rows and columns that contain information about the product and its available quantity.
 
-Um banco de dados não relacional é um banco de dados que não usa o esquema de tabela de linhas e colunas. Em contra partida, eles utilizam um modelo de armazenamento otimizado para os requisitos específicos do tipo de dados que está sendo armazenado, com altas taxas de atualização, como graficos ou documentos JSON.
+### ***Non-Relational Database***
 
-#### __Exemplo de Uso:__ ###
+A non-relational database (often called **NoSQL**) is a database that does not use the traditional tabular schema of rows and columns. Instead, it employs a storage model optimized for the specific requirements of the data being stored. This makes it highly effective for handling data with complex structures or high update rates, such as **graph data** or **JSON documents**.
 
-Uma plataforma de streaming que necessita saber as prefências dos usuários. Para este fim é necessário que os dados estejam ordenados em um gráfico que mostre as preferências e suporte uma atualização constante de dados.
+#### **Use Case Example:**
 
----
+A streaming platform needs to analyze user preferences to provide recommendations. For this purpose, the data can be structured as a **graph**, where users and content are nodes, and their interactions (e.g., "likes," "watched") are edges. This model efficiently represents complex relationships and supports constant, rapid data updates.
 
-## ___Processo de Normalização___
+***The Normalization Process***
+-------------------------------
 
-A normalização de dados é um processo que organiza as informações em um banco de dados para reduzir a redundancia e melhorar a integridade dos dados. Basicamente, ela visa eliminar informação duplicado e inconsistente, facilitando a manipulação e análise das informações.
+Data normalization is the process of structuring a relational database to **reduce data redundancy** and **improve data integrity**. Its primary goal is to eliminate duplicate and inconsistent information, thereby simplifying data manipulation and analysis.
 
-### ___Normalizando:___
+### ***Normalizing:***
 
-```Tabela não normalizada```
+`Unnormalized Table`
 
-|Pedido_ID|Cliente_Nome|Cliente_Endereço|Produto_ID|Quantidade|Preço_Total|
+|Order_ID|Customer_Name|Customer_Address|Product_ID|Quantity|Total_Price|
 |---------|------------|----------------|----------|----------|-----------|
-  |1|     João Silva    |   Rua A, 123         |   10             | Caneta          |   2       |   4,00         |
-  |1|     João Silva    |   Rua A, 123         |   11             | Lápis           |   1       |   2,00         |
-  |2|     Maria Souza   |   Av. B, 456         |   10             | Caneta          |   5       |  10,00         |
+  |1|     João Silva    |   St A, 123         |   10             | Pen          |   2       |   4,00         |
+  |1|     João Silva    |   St A, 123         |   11             | Pencil         |   1       |   2,00         |
+  |2|     Maria Souza   |   St. B, 456         |   10             | Pen         |   5       |  10,00         |
 
   ---
 
+`1st Normal Form (1NF)` By creating a `Customers` table, we extract the attributes: `Customer_ID`, `Name`, and `Address`.
 
-```1ª Forma Normal```
-Criando uma tabela de clientes, extraimos os: Cliente_ID, Nome e Endereço.
-
-| Cliente_ID | Nome        | Endereço  |
+| Customers_ID | Name       | Address  |
 |------------|-------------|-----------|
-| 1          | João Silva  | Rua A, 23 |
-| 2          | Maria Souza | Av. B,456 |
-- Retiramos as repetições
+| 1          | João Silva  | St A, 23 |
+| 2          | Maria Souza | St. B,456 |
+
+-   **Objective:** Eliminate repeating groups and ensure all data values are atomic (indivisible).
+
 ---
 
-```2ª Forma Normal```
-Criando uma tabela de produtos, extraimos os: Produto_ID, Produto_Nome.
-| Produto_ID| Produto_Nome |
+`2nd Normal Form (2NF)` By creating a `Products` table, we extract: `Product_ID` and `Product_Name`.
+
+| Product_ID| Product_Name |
 |-------------|-----------|
-|10  | Caneta |
-|11  | Lápis  |
-- Retiramos as dependencias parciais
+|10  | Pen |
+|11  | Pencil  |
+
+-   **Objective:** Remove partial dependencies. This ensures that all non-key attributes are fully dependent on the entire primary key (which is especially relevant for composite keys).
+
 ---
-```3ª Forma Normal```
-Criando uma tabela de itens, extraimos os: Produto_ID, Pedido_ID, Quantidade, Preço_Total.
-| Pedido_ID | Produto_ID | Quantidade | Preço_Total |
+
+`3rd Normal Form (3NF)` By creating an `Order_Items` table, we extract: `Product_ID`, `Order_ID`, `Quantity`, and `Total_Price`.
+
+| Order_ID | Product_ID | Quantity | Total_Price |
 |-----------|------------|------------|-------------|
 | 1         | 10         | 2          | 4,00        |
 | 1         | 11         | 1          | 2,00        |
 | 2         | 10         | 5          | 10,00       |
-- Retiramos as dependencias transitivas
----
-## ___Estrutura Não Relacional(MongoDB)___
 
-Este tipo de estrutura é devidamente utilizado devido a flexibilidade, velocidade e escalabilidade. A falta da necessidade de criação de tabelas acelera e otimiza os dados, abrindo possibilidades para mais dados, e, consequentemente Big Data, onde a manipulação humana ficaria invíavel.
+-   **Objective:** Remove transitive dependencies. This ensures that no non-key attribute is dependent on another non-key attribute.
 
+***Non-Relational Structure (MongoDB Example)***
+------------------------------------------------
 
-```json
+This type of structure is widely utilized due to its inherent **flexibility, speed, and scalability**. The absence of a rigid, predefined schema accelerates development and optimizes performance for specific data models. This flexibility is crucial for handling vast and varied datasets, a cornerstone of **Big Data**, where traditional manual data management becomes infeasible.
 
+```
+[
   {
-    "pedido_id": 1,
-    "cliente": {
-      "cliente_id": 1,
-      "nome": "João Silva",
-      "endereco": "Rua A, 123"
+    "order_id": 1,
+    "customer": {
+      "customer_id": 1,
+      "name": "João Silva",
+      "address": "Rua A, 123"
     },
-    "itens": [
+    "items": [
       {
-        "produto_id": 10,
-        "produto_nome": "Caneta",
-        "quantidade": 2,
-        "preco_total": 4.00
+        "product_id": 10,
+        "product_name": "Pen",
+        "quantity": 2,
+        "total_price": 4.00
       },
       {
-        "produto_id": 11,
-        "produto_nome": "Lápis",
-        "quantidade": 1,
-        "preco_total": 2.00
+        "product_id": 11,
+        "product_name": "Pencil",
+        "quantity": 1,
+        "total_price": 2.00
       }
     ]
   },
   {
-    "pedido_id": 2,
-    "cliente": {
-      "cliente_id": 2,
-      "nome": "Maria Souza",
-      "endereco": "Av. B, 456"
+    "order_id": 2,
+    "customer": {
+      "customer_id": 2,
+      "name": "Maria Souza",
+      "address": "Av. B, 456"
     },
-    "itens": [
+    "items": [
       {
-        "produto_id": 10,
-        "produto_nome": "Caneta",
-        "quantidade": 5,
-        "preco_total": 10.00
+        "product_id": 10,
+        "product_name": "Pen",
+        "quantity": 5,
+        "total_price": 10.00
       }
     ]
   }
+]
+
 ```
-
-
-
-
-
-
-
